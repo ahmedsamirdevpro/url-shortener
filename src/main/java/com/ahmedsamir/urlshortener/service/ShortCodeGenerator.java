@@ -1,4 +1,5 @@
 package com.ahmedsamir.urlshortener.service;
 
-public class ShortCodeGenerator {
+public interface ShortCodeGenerator {
+    String generate();
 }

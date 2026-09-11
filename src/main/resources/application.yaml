@@ -1,3 +1,22 @@
 spring:
   application:
     name: url-shortener
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/url_shortener_db}
+    username: ${SPRING_DATASOURCE_USERNAME:url_shortener_user}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: false
+
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+
+app:
+  base-url: ${APP_BASE_URL:http://localhost:8080}

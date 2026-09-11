@@ -1,4 +1,4 @@
 package com.ahmedsamir.urlshortener.dto;
 
-public class CreateUrlResponse {
+public record CreateUrlResponse (String shortCode , String shortUrl){
 }

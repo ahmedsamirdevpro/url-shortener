@@ -1,4 +1,9 @@
 package com.ahmedsamir.urlshortener.service;
 
-public class UrlService {
+import com.ahmedsamir.urlshortener.dto.CreateUrlRequest;
+import com.ahmedsamir.urlshortener.dto.CreateUrlResponse;
+
+public interface UrlService {
+    CreateUrlResponse createShortUrl(CreateUrlRequest request);
+    String getOriginalUrl (String shortCode);
 }
