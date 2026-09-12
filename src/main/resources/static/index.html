@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>URL Shortener</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f6f8fa;
+            color: #17202a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 680px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e1e5e9;
+            border-radius: 18px;
+            padding: 40px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #edf7ed;
+            color: #2e7d32;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: 38px;
+            line-height: 1.15;
+        }
+
+        .description {
+            margin: 0 0 30px;
+            color: #667085;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            min-width: 0;
+            height: 52px;
+            padding: 0 16px;
+            border: 1px solid #d0d5dd;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #198754;
+            box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.12);
+        }
+
+        button {
+            height: 52px;
+            padding: 0 22px;
+            border: 0;
+            border-radius: 10px;
+            background: #198754;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background: #157347;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .error {
+            margin-top: 14px;
+            color: #b42318;
+            font-size: 14px;
+        }
+
+        .result {
+            display: none;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid #eaecf0;
+        }
+
+        .result.visible {
+            display: block;
+        }
+
+        .result-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475467;
+        }
+
+        .short-link {
+            display: flex;
+            gap: 8px;
+        }
+
+        .short-link a {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            min-height: 48px;
+            border: 1px solid #d0d5dd;
+            border-radius: 10px;
+            color: #198754;
+            text-decoration: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .copy-button {
+            background: #344054;
+        }
+
+        .copy-button:hover {
+            background: #1d2939;
+        }
+
+        .success {
+            margin-top: 10px;
+            color: #027a48;
+            font-size: 13px;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #98a2b3;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 28px 20px;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+
+            form {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .short-link {
+                flex-direction: column;
+            }
+
+            .copy-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <span class="badge">Live Demo</span>
+
+        <h1>URL Shortener</h1>
+
+        <p class="description">
+            Turn long URLs into short, shareable links.
+        </p>
+
+        <form id="shorten-form">
+
+            <input
+                    id="url-input"
+                    type="url"
+                    placeholder="https://example.com/your-long-url"
+                    autocomplete="url"
+                    required
+            >
+
+            <button id="submit-button" type="submit">
+                Shorten URL
+            </button>
+
+        </form>
+
+        <div id="error" class="error"></div>
+
+        <div id="result" class="result">
+
+            <span class="result-label">
+                Your short link
+            </span>
+
+            <div class="short-link">
+
+                <a
+                        id="short-url"
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer">
+                </a>
+
+                <button
+                        id="copy-button"
+                        class="copy-button"
+                        type="button">
+                    Copy
+                </button>
+
+            </div>
+
+            <div id="success" class="success"></div>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Java · Spring Boot · PostgreSQL · Redis
+    </div>
+
+</div>
+
+<script>
+    const form = document.getElementById("shorten-form");
+    const input = document.getElementById("url-input");
+    const submitButton = document.getElementById("submit-button");
+
+    const error = document.getElementById("error");
+    const result = document.getElementById("result");
+
+    const shortUrl = document.getElementById("short-url");
+    const copyButton = document.getElementById("copy-button");
+    const success = document.getElementById("success");
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        error.textContent = "";
+        success.textContent = "";
+        result.classList.remove("visible");
+
+        const originalUrl = input.value.trim();
+
+        if (!originalUrl) {
+            error.textContent = "Please enter a URL.";
+            return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Shortening...";
+
+        try {
+
+            const response = await fetch("/api/v1/urls", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    originalUrl: originalUrl
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || "Failed to shorten the URL."
+                );
+            }
+
+            shortUrl.href = data.shortUrl;
+            shortUrl.textContent = data.shortUrl;
+
+            result.classList.add("visible");
+
+        } catch (exception) {
+
+            error.textContent =
+                exception.message || "Something went wrong.";
+
+        } finally {
+
+            submitButton.disabled = false;
+            submitButton.textContent = "Shorten URL";
+        }
+    });
+
+    copyButton.addEventListener("click", async () => {
+
+        const url = shortUrl.href;
+
+        try {
+
+            await navigator.clipboard.writeText(url);
+
+            success.textContent = "Short link copied.";
+
+        } catch (exception) {
+
+            success.textContent = "Copy failed. Please copy the link manually.";
+        }
+    });
+</script>
+
+</body>
+</html>
