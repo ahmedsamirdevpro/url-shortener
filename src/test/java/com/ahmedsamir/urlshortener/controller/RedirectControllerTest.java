@@ -38,10 +38,10 @@ class RedirectControllerTest {
     @Test
     void shouldReturnNotFoundWhenShortCodeDoesNotExist() throws Exception {
 
-        when(urlService.getOriginalUrl("doesNotExist"))
-                .thenThrow(new ShortCodeNotFoundException("doesNotExist"));
+        when(urlService.getOriginalUrl("ZZZZZZZ"))
+                .thenThrow(new ShortCodeNotFoundException("ZZZZZZZ"));
 
-        mockMvc.perform(get("/doesNotExist"))
+        mockMvc.perform(get("/ZZZZZZZ"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.error").value("Not Found"));

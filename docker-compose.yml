@@ -29,6 +29,9 @@ services:
       retries: 5
 
   url-shortener:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: url-shortener:1.0
     container_name: url-shortener-app
     environment:
